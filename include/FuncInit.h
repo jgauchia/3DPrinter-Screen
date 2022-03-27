@@ -58,3 +58,91 @@ bool init_WiFi()
   Serial.println(WiFi.localIP());
   return true;
 }
+
+// **********************************************
+//  Función para leer configuración WiFi
+// **********************************************
+void read_WIFICONFIG()
+{
+  ssid = read_WiFi_config(SPIFFS, ssidPath);
+  pass = read_WiFi_config(SPIFFS, passPath);
+  ip = read_WiFi_config(SPIFFS, ipPath);
+  gateway = read_WiFi_config(SPIFFS, gatewayPath);
+  Serial.println(ssid);
+  Serial.println(pass);
+  Serial.println(ip);
+  Serial.println(gateway);
+}
+
+// **********************************************
+//  Función para inicializar SD
+// **********************************************
+void init_SD()
+{
+    digitalWrite(SD_CS,HIGH);
+    SPI.end();
+    spiSD.begin(SD_CLK, SD_MISO, SD_MOSI, SD_CS);
+    if (!SD.begin(SD_CS, spiSD, 100000000)) 
+    { 
+      Serial.println("Error al iniciar SD");
+      return;
+    }   
+}
+
+// **********************************************
+//  Función para iniciar portal WiFiManager
+// **********************************************
+void init_WIFIMANAGER()
+{
+    Serial.println("Modo AP (Access Point)");
+    WiFi.softAP("ESP-WIFI-MANAGER", NULL);
+
+    IPAddress IP = WiFi.softAPIP();
+    Serial.print("Dirección IP AP: ");
+    Serial.println(IP); 
+
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){request->send(SPIFFS, "/wifimanager.html", "text/html");});
+    server.serveStatic("/", SPIFFS, "/");
+    
+    server.on("/", HTTP_POST, [](AsyncWebServerRequest *request)
+    {
+      int params = request->params();
+      for(int i=0;i<params;i++){
+        AsyncWebParameter* p = request->getParam(i);
+        if(p->isPost()){
+          // HTTP POST valor SSID
+          if (p->name() == PARAM_INPUT_1) {
+            ssid = p->value().c_str();
+            Serial.print("SSID: ");
+            Serial.println(ssid);
+            write_Wifi_config(SPIFFS, ssidPath, ssid.c_str());
+          }
+          // HTTP POST valor PASS
+          if (p->name() == PARAM_INPUT_2) {
+            pass = p->value().c_str();
+            Serial.print("Password: ");
+            Serial.println(pass);
+            write_Wifi_config(SPIFFS, passPath, pass.c_str());
+          }
+          // HTTP POST valor IP
+          if (p->name() == PARAM_INPUT_3) {
+            ip = p->value().c_str();
+            Serial.print("IP: ");
+            Serial.println(ip);
+            write_Wifi_config(SPIFFS, ipPath, ip.c_str());
+          }
+          // HTTP POST valor gateway
+          if (p->name() == PARAM_INPUT_4) {
+            gateway = p->value().c_str();
+            Serial.print("Gateway: ");
+            Serial.println(gateway);
+            write_Wifi_config(SPIFFS, gatewayPath, gateway.c_str());
+          }
+        }
+      }
+      request->send(200, "text/plain", "Configurado. El ESP se reiniciará, Conectar a dirección IP: " + ip);
+      delay(3000);
+      ESP.restart();
+    });
+    server.begin();
+}

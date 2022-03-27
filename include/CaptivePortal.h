@@ -1,5 +1,5 @@
 /*
-       @file       WifiManager.h
+       @file       CaptivePortal.h
        @brief      Declaración variables y elementos usados para el WifiManager
 
        @author     Jordi Gauchia
@@ -32,3 +32,8 @@ const char* ssidPath = "/ssid.txt";
 const char* passPath = "/pass.txt";
 const char* ipPath = "/ip.txt";
 const char* gatewayPath = "/gateway.txt";
+
+// **********************************************
+//  Declaración archivos SPIFF para guardar las
+//  credenciales WifiManager
+// **********************************************

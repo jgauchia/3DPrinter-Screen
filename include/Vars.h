@@ -39,3 +39,20 @@ const long wifi_interval = 10000;
 IPAddress localIP;
 IPAddress localGateway;
 IPAddress subnet(255, 255, 0, 0);
+
+// **********************************************
+//  Declaración usuario y contraseña upload 
+// **********************************************
+const char* HTTP_USERNAME = "admin";
+const char* HTTP_PASSWORD = "admin";
+
+// **********************************************
+//  Declaración tamaño máximo archivo upload
+// **********************************************
+const size_t MAX_FILESIZE = 1024 * 1024 * 15;
+File UploadFile; 
+
+// **********************************************
+//  Declaración servidor WEB
+// **********************************************
+AsyncWebServer server(80); 

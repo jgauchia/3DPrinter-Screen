@@ -32,28 +32,14 @@
 #include <SPIFFS.h>
 #include <SPI.h>
 #include <SD.h>
+
 #include <upload_htm.h>
 #include <Vars.h>
-#include <WifiManager.h>
-#include <FuncInit.h>
+#include <CaptivePortal.h>
 #include <FuncFiles.h>
+#include <FuncInit.h>
 
 #define SERIAL_DEBUG 1
-
-/****************************************************************************
-
-       POC to upload a file to esp32 with authorization
-
-       Browse to your esp32 to upload files
-
- *****************************************************************************/
-
-const char* HTTP_USERNAME = "admin";
-const char* HTTP_PASSWORD = "admin";
-const size_t MAX_FILESIZE = 1024 * 1024 * 15;
- File UploadFile; 
-
-AsyncWebServer server(80); 
 
 /* format bytes as KB, MB or GB string */
 String humanReadableSize(const size_t bytes) {
@@ -63,46 +49,19 @@ String humanReadableSize(const size_t bytes) {
     else return String(bytes / 1024.0 / 1024.0 / 1024.0) + " GB";
 }
 
-void setup() {
-  
-#ifdef DEBUG
+void setup() 
+{
+  #ifdef SERIAL_DEBUG
     Serial.begin(115200);
-#endif
-
+  #endif
   init_SPIFFS();
+  read_WIFICONFIG();
 
-  // Load values saved in SPIFFS
-  ssid = read_WiFi_config(SPIFFS, ssidPath);
-  pass = read_WiFi_config(SPIFFS, passPath);
-  ip = read_WiFi_config(SPIFFS, ipPath);
-  gateway = read_WiFi_config(SPIFFS, gatewayPath);
-  Serial.println(ssid);
-  Serial.println(pass);
-  Serial.println(ip);
-  Serial.println(gateway);
-
-if(init_WiFi()) {
-
-  digitalWrite(4,HIGH);
-    SPI.end();
-   spiSD.begin(SD_CLK, SD_MISO, SD_MOSI, SD_CS);
-   if (!SD.begin(SD_CS, spiSD, 100000000)) 
-   { 
-    Serial.println("initialization failed!");
-    return;
-  }
-
-    // WiFi.mode(WIFI_STA);
-    // WiFi.setSleep(false);
-    // WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    // Serial.printf("Connecting to WIFI_SSID %s with PSK %s...\n", WIFI_SSID, WIFI_PASSWORD);
-    // if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    //     Serial.printf("WiFi Failed!\n");
-    //     return;
-    // }
+  if(init_WiFi()) 
+  {
+    init_SD();
 
     static const char* MIMETYPE_HTML{"text/html"};
-
     server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
     {
         AsyncWebServerResponse *response = request->beginResponse_P(200, MIMETYPE_HTML, upload_htm, upload_htm_len);
@@ -218,73 +177,13 @@ if(init_WiFi()) {
 
     Serial.print("Upload files at ");
     Serial.println(WiFi.localIP());
-    }
-    else {
-    // Connect to Wi-Fi network with SSID and password
-    Serial.println("Setting AP (Access Point)");
-    // NULL sets an open Access Point
-    WiFi.softAP("ESP-WIFI-MANAGER", NULL);
-
-    IPAddress IP = WiFi.softAPIP();
-    Serial.print("AP IP address: ");
-    Serial.println(IP); 
-
-    // Web Server Root URL
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-      request->send(SPIFFS, "/wifimanager.html", "text/html");
-    });
-    
-    server.serveStatic("/", SPIFFS, "/");
-    
-    server.on("/", HTTP_POST, [](AsyncWebServerRequest *request) {
-      int params = request->params();
-      for(int i=0;i<params;i++){
-        AsyncWebParameter* p = request->getParam(i);
-        if(p->isPost()){
-          // HTTP POST ssid value
-          if (p->name() == PARAM_INPUT_1) {
-            ssid = p->value().c_str();
-            Serial.print("SSID set to: ");
-            Serial.println(ssid);
-            // Write file to save value
-            write_Wifi_config(SPIFFS, ssidPath, ssid.c_str());
-          }
-          // HTTP POST pass value
-          if (p->name() == PARAM_INPUT_2) {
-            pass = p->value().c_str();
-            Serial.print("Password set to: ");
-            Serial.println(pass);
-            // Write file to save value
-            write_Wifi_config(SPIFFS, passPath, pass.c_str());
-          }
-          // HTTP POST ip value
-          if (p->name() == PARAM_INPUT_3) {
-            ip = p->value().c_str();
-            Serial.print("IP Address set to: ");
-            Serial.println(ip);
-            // Write file to save value
-            write_Wifi_config(SPIFFS, ipPath, ip.c_str());
-          }
-          // HTTP POST gateway value
-          if (p->name() == PARAM_INPUT_4) {
-            gateway = p->value().c_str();
-            Serial.print("Gateway set to: ");
-            Serial.println(gateway);
-            // Write file to save value
-            write_Wifi_config(SPIFFS, gatewayPath, gateway.c_str());
-          }
-          //Serial.printf("POST[%s]: %s\n", p->name().c_str(), p->value().c_str());
-        }
-      }
-      request->send(200, "text/plain", "Done. ESP will restart, connect to your router and go to IP address: " + ip);
-      delay(3000);
-      ESP.restart();
-    });
-        server.begin();
   }
+  else 
+    init_WIFIMANAGER();
 }
 
-void loop() {
+void loop() 
+{
     delay(1000);
 }
 
