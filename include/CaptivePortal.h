@@ -33,7 +33,3 @@ const char* passPath = "/pass.txt";
 const char* ipPath = "/ip.txt";
 const char* gatewayPath = "/gateway.txt";
 
-// **********************************************
-//  Declaración archivos SPIFF para guardar las
-//  credenciales WifiManager
-// **********************************************
