@@ -48,7 +48,6 @@
 bool shouldReboot = false;  
 String listFiles(bool ishtml = false);
 
-
 void rebootESP(String message) {
   Serial.print("Rebooting ESP32: "); Serial.println(message);
   ESP.restart();
@@ -237,7 +236,6 @@ void configureWebServer() {
 }
 
 
-
 void setup() 
 {
   #ifdef SERIAL_DEBUG
@@ -258,6 +256,5 @@ void setup()
 
 void loop() 
 {
-    delay(1000);
 }
 
