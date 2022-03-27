@@ -56,3 +56,17 @@ File UploadFile;
 //  Declaración servidor WEB
 // **********************************************
 AsyncWebServer server(80);
+
+// **********************************************
+//  Declaración previa de funciones
+// **********************************************
+void init_WIFIMANAGER();
+void WebnotFound(AsyncWebServerRequest *request);
+String WebParser(const String& var);
+String read_WiFi_config(fs::FS &fs, const char * path);
+void write_Wifi_config(fs::FS &fs, const char * path, const char * message);
+void init_SPIFFS();
+bool init_WiFi();
+void read_WIFICONFIG();
+void init_SD();
+String humanReadableSize(const size_t bytes);

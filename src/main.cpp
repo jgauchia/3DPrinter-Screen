@@ -33,37 +33,21 @@
 #include <SPI.h>
 #include <SD.h>
 
-#include <upload_htm.h>
-#include <Vars.h>
-#include <CaptivePortal.h>
-#include <FuncFiles.h>
-#include <FuncInit.h>
-#include "webpages.h"
+#define SERIAL_DEBUG 1
+#define FIRMWARE_VERSION "v0.0.1"
 
+#include <Vars.h>
+#include <FuncVar.h>
+#include <WebPage.h>
+#include <FuncFiles.h>
+#include <CaptivePortal.h>
+#include <FileServer.h>
+#include <FuncInit.h>
 
 
 bool shouldReboot = false;  
 String listFiles(bool ishtml = false);
 
-#define SERIAL_DEBUG 1
-#define FIRMWARE_VERSION "v0.0.1"
-
-/////////////////////////
-/* format bytes as KB, MB or GB string */
-String humanReadableSize(const size_t bytes) {
-    if (bytes < 1024) return String(bytes) + " B";
-    else if (bytes < (1024 * 1024)) return String(bytes / 1024.0) + " KB";
-    else if (bytes < (1024 * 1024 * 1024)) return String(bytes / 1024.0 / 1024.0) + " MB";
-    else return String(bytes / 1024.0 / 1024.0 / 1024.0) + " GB";
-}
-
-
-/////////////////////////////
-void notFound(AsyncWebServerRequest *request) {
-  String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
-  Serial.println(logmessage);
-  request->send(404, "text/plain", "Not found");
-}
 
 void rebootESP(String message) {
   Serial.print("Rebooting ESP32: "); Serial.println(message);
@@ -98,7 +82,6 @@ String listFiles(bool ishtml) {
 }
 
 
-// used by server.on functions to discern whether a user has the correct httpapitoken OR is authenticated by username and password
 bool checkUserWebAuth(AsyncWebServerRequest * request) {
   bool isAuthenticated = false;
 
@@ -144,31 +127,13 @@ void handleUpload(AsyncWebServerRequest *request, String filename, size_t index,
   //   return request->requestAuthentication();
   // }
 }
-// parses and processes webpages
-// if the webpage has %SOMETHING% or %SOMETHINGELSE% it will replace those strings with the ones defined
-String processor(const String& var) {
-  if (var == "FIRMWARE") {
-    return FIRMWARE_VERSION;
-  }
 
-  if (var == "FREESD") {
-    return humanReadableSize((SD.totalBytes() - SD.usedBytes()));
-  }
-
-  if (var == "USEDSD") {
-    return humanReadableSize(SD.usedBytes());
-  }
-
-  if (var == "TOTALSD") {
-    return humanReadableSize(SD.totalBytes());
-  }
-}
 
 void configureWebServer() {
   // configure web server
 
   // if url isn't found
-  server.onNotFound(notFound);
+  server.onNotFound(WebnotFound);
 
   // run handleUpload function when any file is uploaded
   server.onFileUpload(handleUpload);
@@ -183,7 +148,7 @@ void configureWebServer() {
   server.on("/logged-out", HTTP_GET, [](AsyncWebServerRequest * request) {
     String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
     Serial.println(logmessage);
-    request->send_P(401, "text/html", logout_html, processor);
+    request->send_P(401, "text/html", logout_html, WebParser);
   });
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -192,7 +157,7 @@ void configureWebServer() {
     if (checkUserWebAuth(request)) {
       logmessage += " Auth: Success";
       Serial.println(logmessage);
-      request->send_P(200, "text/html", index_html, processor);
+      request->send_P(200, "text/html", index_html, WebParser);
     } else {
       logmessage += " Auth: Failed";
       Serial.println(logmessage);
