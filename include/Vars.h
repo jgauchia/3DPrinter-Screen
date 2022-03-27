@@ -26,3 +26,16 @@ HardwareSerial *Marlin = &Serial2;
 //  Declaración para la microSD
 // **********************************************
 SPIClass spiSD(HSPI);
+
+// **********************************************
+//  Declaración timer y espera conexión WiFi
+// **********************************************
+unsigned long previousMillis = 0;
+const long wifi_interval = 10000;  
+
+// **********************************************
+//  Declaración variables dirección Wifi
+// **********************************************
+IPAddress localIP;
+IPAddress localGateway;
+IPAddress subnet(255, 255, 0, 0);
