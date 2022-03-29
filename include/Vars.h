@@ -56,6 +56,7 @@ File UploadFile;
 //  Declaración servidor WEB
 // **********************************************
 AsyncWebServer server(80);
+bool shouldReboot = false; 
 
 // **********************************************
 //  Declaración previa de funciones
@@ -70,3 +71,8 @@ bool init_WiFi();
 void read_WIFICONFIG();
 void init_SD();
 String humanReadableSize(const size_t bytes);
+void rebootESP(String message);
+String listFiles(bool ishtml = false);
+bool checkUserWebAuth(AsyncWebServerRequest * request);
+void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
+void configureWebServer();
