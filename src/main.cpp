@@ -23,6 +23,9 @@
        ILI9341           :  https://github.com/Bodmer/TFT_eSPI
        AsyncTCP          :  https://github.com/me-no-dev/AsyncTCP
        ESAPsyncWebServer :  https://github.com/me-no-dev/ESPAsyncWebServer
+
+SSID Portal captivo: ESP-WIFI-MANAGER
+IP   Portal captivo: 192.168.4.1       
 */
 
 #include "Arduino.h"
