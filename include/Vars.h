@@ -28,6 +28,11 @@ HardwareSerial *Marlin = &Serial2;
 SPIClass spiSD(HSPI);
 
 // **********************************************
+//  Declaración para el TFT ILI9341
+// **********************************************
+TFT_eSPI tft = TFT_eSPI();
+
+// **********************************************
 //  Declaración timer y espera conexión WiFi
 // **********************************************
 unsigned long previousMillis = 0;
@@ -76,3 +81,6 @@ String listFiles(bool ishtml = false);
 bool checkUserWebAuth(AsyncWebServerRequest * request);
 void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
 void configureWebServer();
+void init_ili9341();
+String read_GCode(fs::FS &fs, const char *filename);
+long parse_GCODE(String data, char* c);

@@ -18,3 +18,13 @@ String humanReadableSize(const size_t bytes)
     else if (bytes < (1024 * 1024 * 1024)) return String(bytes / 1024.0 / 1024.0) + " Mb";
     else return String(bytes / 1024.0 / 1024.0 / 1024.0) + " Gb";
 }
+
+// **********************************************
+//  Función para parsear GCODE para vista previa
+// **********************************************
+long parse_GCODE(String data, char* c)
+{
+    int offset = data.indexOf(c);
+    int offset1 = data.lastIndexOf(" ", offset + 1);
+    return offset1 > 0 ? data.substring(offset + 1, offset + 1 + offset1 + 1).toInt() : data.substring(offset + 1).toInt();
+}

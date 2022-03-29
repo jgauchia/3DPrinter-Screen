@@ -89,3 +89,13 @@ void init_SD()
     }   
 }
 
+// **********************************************
+//  Función para inicializar el LCD
+// **********************************************
+void init_ili9341()
+{
+  tft.init();
+  tft.setRotation(2);
+  tft.fillScreen(TFT_BLACK);
+  tft.initDMA();
+}
