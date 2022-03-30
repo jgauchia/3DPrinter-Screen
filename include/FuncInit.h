@@ -19,62 +19,6 @@ void init_SPIFFS()
 }
 
 // **********************************************
-//  Función para inicializar Wifi
-// **********************************************
-bool init_WiFi() 
-{
-  if(ssid=="" || ip=="")
-  {
-    Serial.println("SSID o IP no definida.");
-    return false;
-  }
-
-  WiFi.mode(WIFI_STA);
-  localIP.fromString(ip.c_str());
-  localGateway.fromString(gateway.c_str());
-
-  if (!WiFi.config(localIP, localGateway, subnet))
-  {
-    Serial.println("Error configurando WiFi");
-    return false;
-  }
-
-  WiFi.begin(ssid.c_str(), pass.c_str());
-  Serial.println("Conectando a red WiFi...");
-
-  unsigned long currentMillis = millis();
-  previousMillis = currentMillis;
-
-  while(WiFi.status() != WL_CONNECTED) 
-  {
-    currentMillis = millis();
-    if (currentMillis - previousMillis >= wifi_interval)
-    {
-      Serial.println("Error de conexión");
-      return false;
-    }
-  }
-
-  Serial.println(WiFi.localIP());
-  return true;
-}
-
-// **********************************************
-//  Función para leer configuración WiFi
-// **********************************************
-void read_WIFICONFIG()
-{
-  ssid = read_WiFi_config(SPIFFS, ssidPath);
-  pass = read_WiFi_config(SPIFFS, passPath);
-  ip = read_WiFi_config(SPIFFS, ipPath);
-  gateway = read_WiFi_config(SPIFFS, gatewayPath);
-  Serial.println(ssid);
-  Serial.println(pass);
-  Serial.println(ip);
-  Serial.println(gateway);
-}
-
-// **********************************************
 //  Función para inicializar SD
 // **********************************************
 void init_SD()

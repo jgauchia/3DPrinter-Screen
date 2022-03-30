@@ -33,19 +33,6 @@ SPIClass spiSD(HSPI);
 TFT_eSPI tft = TFT_eSPI();
 
 // **********************************************
-//  Declaración timer y espera conexión WiFi
-// **********************************************
-unsigned long previousMillis = 0;
-const long wifi_interval = 10000;  
-
-// **********************************************
-//  Declaración variables dirección Wifi
-// **********************************************
-IPAddress localIP;
-IPAddress localGateway;
-IPAddress subnet(255, 255, 0, 0);
-
-// **********************************************
 //  Declaración usuario y contraseña upload 
 // **********************************************
 const char* HTTP_USERNAME = "admin";
@@ -66,14 +53,10 @@ bool shouldReboot = false;
 // **********************************************
 //  Declaración previa de funciones
 // **********************************************
-void init_WIFIMANAGER();
+// void init_WIFIMANAGER();
 void WebnotFound(AsyncWebServerRequest *request);
 String WebParser(const String& var);
-String read_WiFi_config(fs::FS &fs, const char * path);
-void write_Wifi_config(fs::FS &fs, const char * path, const char * message);
 void init_SPIFFS();
-bool init_WiFi();
-void read_WIFICONFIG();
 void init_SD();
 String humanReadableSize(const size_t bytes);
 void rebootESP(String message);

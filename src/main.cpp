@@ -30,7 +30,6 @@ IP   Portal captivo: 192.168.4.1
 
 #include "Arduino.h"
 #include <TFT_eSPI.h>
-#include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
@@ -41,12 +40,14 @@ IP   Portal captivo: 192.168.4.1
 #define FIRMWARE_VERSION "v0.0.1"
 
 #include <Vars.h>
+#include <WiFi_cfg.h>
 #include <FuncVar.h>
 #include <WebPage.h>
 #include <FuncFiles.h>
-#include <CaptivePortal.h>
 #include <FileServer.h>
 #include <FuncInit.h>
+
+WiFi_cfg wifi;
 
 void setup() 
 {
@@ -54,21 +55,18 @@ void setup()
     Serial.begin(115200);
   #endif
   init_SPIFFS();
-  read_WIFICONFIG(); 
   init_ili9341();
   init_SD();
 
-  if(init_WiFi()) 
+  if(wifi.init()) 
   {
-
     configureWebServer();
     server.begin();
-
     // Prueba de lectura y renderizado de un GCode
-    read_GCode(SD,"/cube.gcode");
+    //read_GCode(SD,"/cube.gcode");
   }
   else 
-    init_WIFIMANAGER();
+    wifi.wifimanager();
 }
 
 void loop() 
