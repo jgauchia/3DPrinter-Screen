@@ -39,7 +39,6 @@ void init_SD()
 void init_ili9341()
 {
   tft.init();
-  tft.setRotation(2);
-  tft.fillScreen(TFT_BLACK);
+  tft.setRotation(3);
   tft.initDMA();
 }

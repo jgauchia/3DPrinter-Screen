@@ -20,6 +20,7 @@ Programa para pantalla Marlin
        ILI9341           :  https://github.com/Bodmer/TFT_eSPI
        AsyncTCP          :  https://github.com/me-no-dev/AsyncTCP
        ESAPsyncWebServer :  https://github.com/me-no-dev/ESPAsyncWebServer
+       LVGL              :  https://github.com/lvgl/lvgl
 
 
 SSID Portal captivo: ESP-WIFI-MANAGER

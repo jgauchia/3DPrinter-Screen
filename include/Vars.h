@@ -28,8 +28,12 @@ HardwareSerial *Marlin = &Serial2;
 SPIClass spiSD(HSPI);
 
 // **********************************************
-//  Declaración para el TFT ILI9341
+//  Declaración para el TFT ILI9341 + LVGL
 // **********************************************
+static const uint16_t screenWidth  = 320;
+static const uint16_t screenHeight = 240;
+static lv_disp_draw_buf_t draw_buf;
+static lv_color_t buf[ screenWidth * 10 ];
 TFT_eSPI tft = TFT_eSPI();
 
 // **********************************************
@@ -51,6 +55,16 @@ AsyncWebServer server(80);
 bool shouldReboot = false; 
 
 // **********************************************
+//  Timer Interrupciones ESP32
+// **********************************************
+Ticker tick; 
+SemaphoreHandle_t xSemaphore = NULL;
+static void lv_tick_handler(void)
+{
+  lv_tick_inc(LVGL_TICK_PERIOD);
+}
+
+// **********************************************
 //  Declaración previa de funciones
 // **********************************************
 // void init_WIFIMANAGER();
@@ -67,3 +81,8 @@ void configureWebServer();
 void init_ili9341();
 String read_GCode(fs::FS &fs, const char *filename);
 long parse_GCODE(String data, char* c);
+void init_LVGL();
+void my_touchpad_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data );
+void my_disp_flush( lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p );
+void touch_calibrate();
+static void lv_tick_handler(void);
