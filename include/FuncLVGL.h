@@ -40,10 +40,6 @@ void my_touchpad_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data )
 
       data->point.x = touchX;
       data->point.y = touchY;
-      Serial.print( "Data x " );
-      Serial.println( touchX );
-      Serial.print( "Data y " );
-      Serial.println( touchY );
     }
 }
 
@@ -54,7 +50,7 @@ void init_LVGL()
 {
     lv_disp_draw_buf_init( &draw_buf, buf, NULL, screenWidth * 10 );
 
-     static lv_disp_drv_t disp_drv;
+    static lv_disp_drv_t disp_drv;
     lv_disp_drv_init( &disp_drv );
 
     disp_drv.hor_res = screenWidth;

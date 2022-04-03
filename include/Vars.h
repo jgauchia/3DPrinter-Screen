@@ -7,6 +7,12 @@
        @date       27/03/2022
 */
 
+#define SERIAL_DEBUG 1
+#define FIRMWARE_VERSION "v0.0.1"
+#define CALIBRATION_FILE "/TouchCalData1"
+#define REPEAT_CAL false
+#define LVGL_TICK_PERIOD 10
+
 // **********************************************
 //  Definición pines serial Marlin
 // **********************************************
@@ -15,17 +21,10 @@
 HardwareSerial *Marlin = &Serial2;
 
 // **********************************************
-//  Definición pines microSD
+//  Declaración usuario y contraseña upload 
 // **********************************************
-#define SD_CS   4
-#define SD_MISO 27
-#define SD_MOSI 13
-#define SD_CLK  14
-
-// **********************************************
-//  Declaración para la microSD
-// **********************************************
-SPIClass spiSD(HSPI);
+const char* HTTP_USERNAME = "admin";
+const char* HTTP_PASSWORD = "admin";
 
 // **********************************************
 //  Declaración para el TFT ILI9341 + LVGL
@@ -34,13 +33,7 @@ static const uint16_t screenWidth  = 320;
 static const uint16_t screenHeight = 240;
 static lv_disp_draw_buf_t draw_buf;
 static lv_color_t buf[ screenWidth * 10 ];
-TFT_eSPI tft = TFT_eSPI();
 
-// **********************************************
-//  Declaración usuario y contraseña upload 
-// **********************************************
-const char* HTTP_USERNAME = "admin";
-const char* HTTP_PASSWORD = "admin";
 
 // **********************************************
 //  Declaración tamaño máximo archivo upload
@@ -64,21 +57,18 @@ static void lv_tick_handler(void)
   lv_tick_inc(LVGL_TICK_PERIOD);
 }
 
+
 // **********************************************
 //  Declaración previa de funciones
 // **********************************************
-// void init_WIFIMANAGER();
 void WebnotFound(AsyncWebServerRequest *request);
 String WebParser(const String& var);
-void init_SPIFFS();
-void init_SD();
 String humanReadableSize(const size_t bytes);
 void rebootESP(String message);
 String listFiles(bool ishtml = false);
 bool checkUserWebAuth(AsyncWebServerRequest * request);
 void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
 void configureWebServer();
-void init_ili9341();
 String read_GCode(fs::FS &fs, const char *filename);
 long parse_GCODE(String data, char* c);
 void init_LVGL();

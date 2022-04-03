@@ -39,24 +39,17 @@ IP   Portal captivo: 192.168.4.1
 #include <SPI.h>
 #include <SD.h>
 
-#define SERIAL_DEBUG 1
-#define FIRMWARE_VERSION "v0.0.1"
-#define CALIBRATION_FILE "/TouchCalData1"
-#define REPEAT_CAL false
-#define LVGL_TICK_PERIOD 10
-
 #include <Vars.h>
+#include <Init.h>
+
 #include <WiFi_cfg.h>
 #include <FuncVar.h>
 #include <WebPage.h>
 #include <FuncFiles.h>
 #include <FileServer.h>
-#include <FuncInit.h>
 #include <FuncLVGL.h>
 
-#include <lv_demo.h>
-#include <./lv_demo_widgets/lv_demo_widgets.h>
-void lv_demo_widgets(void);
+#include <File_screen.h>
 
 WiFi_cfg wifi;
 
@@ -84,7 +77,7 @@ void setup()
     wifi.wifimanager();
 
   init_LVGL();
-  lv_demo_widgets();
+  show_file_screen();
 }
 
 void loop() 

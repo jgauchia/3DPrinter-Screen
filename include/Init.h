@@ -1,11 +1,29 @@
 /*
-       @file       FuncInit.h
-       @brief      Funciones inicialización necesarias para el programa
+       @file       Init.h
+       @brief      Inicialización 
 
        @author     Jordi Gauchia
 
-       @date       27/03/2022
+       @date       03/04/2022
 */
+
+// **********************************************
+//  Definición pines microSD
+// **********************************************
+#define SD_CS   4
+#define SD_MISO 27
+#define SD_MOSI 13
+#define SD_CLK  14
+
+// **********************************************
+//  Declaración para la microSD
+// **********************************************
+SPIClass spiSD(HSPI);
+
+// **********************************************
+//  Declaración para TFT ILI9341
+// **********************************************
+TFT_eSPI tft = TFT_eSPI();
 
 // **********************************************
 //  Función para inicializar almacen. SPIFFS
