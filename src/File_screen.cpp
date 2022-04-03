@@ -9,6 +9,9 @@
 
 #include <File_screen.h>
 
+static lv_obj_t * FileButton = NULL;
+static lv_obj_t * FileList;
+
 // **********************************************
 //  Evento al pulsar el nombre del archivo.
 // **********************************************

@@ -1,5 +1,5 @@
 /*
-       @file       FileServer.h
+       @file       Web_server.h
        @brief      Declaración de variables y funciones usadas en el File Server
 
        @author     Jordi Gauchia

@@ -15,12 +15,6 @@
 #include <SD.h>
 
 // **********************************************
-//  Declaración variables
-// **********************************************
-lv_obj_t * FileButton = NULL;
-lv_obj_t * FileList;
-
-// **********************************************
 //  Declaración funciones
 // **********************************************
 void event_file_handler(lv_event_t * e);
