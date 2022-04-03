@@ -17,13 +17,13 @@
 // **********************************************
 //  Declaración variables
 // **********************************************
-static lv_obj_t * FileButton = NULL;
-static lv_obj_t * FileList;
+lv_obj_t * FileButton = NULL;
+lv_obj_t * FileList;
 
 // **********************************************
 //  Declaración funciones
 // **********************************************
-static void event_file_handler(lv_event_t * e);
+void event_file_handler(lv_event_t * e);
 void create_directory_listing();
 void show_file_screen();
 
