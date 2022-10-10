@@ -44,7 +44,7 @@ void init_SD()
     digitalWrite(SD_CS,HIGH);
     SPI.end();
     spiSD.begin(SD_CLK, SD_MISO, SD_MOSI, SD_CS);
-    if (!SD.begin(SD_CS, spiSD, 100000000)) 
+    if (!SD.begin(SD_CS, spiSD, 16000000)) 
     { 
       Serial.println("Error al iniciar SD");
       return;

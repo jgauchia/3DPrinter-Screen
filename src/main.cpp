@@ -52,7 +52,6 @@ IP   Portal captivo: 192.168.4.1
 #include <File_screen.h>
 
 WiFi_cfg wifi;
-
 void setup() 
 {
   #ifdef SERIAL_DEBUG
